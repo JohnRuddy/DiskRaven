@@ -20,9 +20,7 @@ a = Analysis(
     binaries=[],
     datas=[
         # Brand assets bundled into the exe
-        ("diskmapper/assets/diskraven.ico",  "diskmapper/assets"),
         ("diskmapper/assets/diskraven.png",  "diskmapper/assets"),
-        ("diskmapper/assets/splash.png",     "diskmapper/assets"),
         ("LICENSE.txt",                       "."),
     ],
     hiddenimports=[
@@ -70,7 +68,6 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon="diskmapper/assets/diskraven.ico",
-    version="file_version_info.txt",       # optional — ignored if missing
 )
 
 coll = COLLECT(
