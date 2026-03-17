@@ -67,7 +67,7 @@ A high-performance, SpaceMonger / WinDirStat-inspired **treemap visualizer** and
 
 The easiest way to install DiskRaven. Provides a familiar InstallShield-style setup wizard.
 
-1. Download `DiskRaven_Setup_1.0.0.exe` from the [Releases](https://github.com/diskraven/diskraven/releases) page
+1. Download `DiskRaven_Setup_1.0.0.exe` from the [Releases](https://github.com/JohnRuddy/DiskRaven/releases) page
 2. Double-click the installer
 3. Follow the setup wizard:
    - Review the license agreement
@@ -84,7 +84,7 @@ The easiest way to install DiskRaven. Provides a familiar InstallShield-style se
 
 No installation required — run directly from any folder or USB drive.
 
-1. Download and extract the `DiskRaven_Portable.zip` from [Releases](https://github.com/diskraven/diskraven/releases)
+1. Download and extract the `DiskRaven_Portable.zip` from [Releases](https://github.com/JohnRuddy/DiskRaven/releases)
 2. Open the extracted `DiskRaven` folder
 3. Double-click `DiskRaven.exe`
 
@@ -106,7 +106,7 @@ For developers or users who prefer running directly with Python.
 
 ```powershell
 # 1. Clone or download the repository
-git clone https://github.com/diskraven/diskraven.git
+git clone https://github.com/JohnRuddy/DiskRaven.git
 cd diskraven
 
 # 2. Create a virtual environment
