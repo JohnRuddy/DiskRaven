@@ -1,5 +1,9 @@
 # 🐦 DiskRaven — See Everything. Reclaim Your Space.
 
+<p align="center">
+  <img src="diskmapper/assets/diskraven.png" alt="DiskRaven Logo" width="180" />
+</p>
+
 A high-performance, SpaceMonger / WinDirStat-inspired **treemap visualizer** and **cleanup assistant** for Windows, built with Python and PyQt6.
 
 ![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue)
