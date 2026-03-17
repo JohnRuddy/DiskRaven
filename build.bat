@@ -5,6 +5,10 @@ REM   ──────────────────────
 REM   Fully self-bootstrapping — creates venv, installs everything,
 REM   then bundles into an exe and optionally builds an installer.
 REM
+REM   Usage:
+REM     build.bat              Build one-directory portable bundle
+REM     build.bat --onefile    Build single-exe portable (USB-ready)
+REM
 REM   Prerequisites:
 REM     • Python 3.10+ on your PATH
 REM     • (Optional) Inno Setup 6  →  https://jrsoftware.org/isinfo.php
@@ -17,6 +21,16 @@ set VENV=.venv\Scripts
 set PYTHON=%VENV%\python.exe
 set PIP=%VENV%\pip.exe
 set ISCC="C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+set BUILD_MODE=onedir
+set SPEC_FILE=diskraven.spec
+
+REM Check for --onefile flag
+for %%a in (%*) do (
+    if /I "%%a"=="--onefile" (
+        set BUILD_MODE=onefile
+        set SPEC_FILE=diskraven_onefile.spec
+    )
+)
 
 echo.
 echo  ┌──────────────────────────────────────────┐
@@ -68,17 +82,23 @@ echo       + PyInstaller installed
 
 REM ── Step 3 — Bundle with PyInstaller ────────────────────────────────────
 
-echo [3/4] Building exe with PyInstaller...
-%PYTHON% -m PyInstaller --clean --noconfirm diskraven.spec
+echo [3/4] Building exe with PyInstaller (%BUILD_MODE% mode)...
+%PYTHON% -m PyInstaller --clean --noconfirm %SPEC_FILE%
 if errorlevel 1 (
     echo [ERROR] PyInstaller build failed.
     exit /b 1
 )
-echo       + dist\DiskRaven\ created
+if "%BUILD_MODE%"=="onefile" (
+    echo       + dist\DiskRaven.exe created  (single portable exe)
+) else (
+    echo       + dist\DiskRaven\ created  (portable folder)
+)
 
-REM ── Step 4 — Build installer with Inno Setup ───────────────────────────
+REM ── Step 4 — Build installer with Inno Setup (onedir only) ──────────────
 
-if exist %ISCC% (
+if "%BUILD_MODE%"=="onefile" (
+    echo [4/4] Skipping installer ^(onefile mode — single exe is the deliverable^)
+) else if exist %ISCC% (
     echo [4/4] Building installer with Inno Setup...
     %ISCC% /Q installer\diskraven_setup.iss
     if errorlevel 1 (
@@ -93,14 +113,22 @@ if exist %ISCC% (
 )
 
 echo.
-echo  ╔══════════════════════════════════════════╗
-echo  ║  Build complete!                          ║
-echo  ╠══════════════════════════════════════════╣
-echo  ║  Portable:  dist\DiskRaven\DiskRaven.exe  ║
+echo  ╔══════════════════════════════════════════════════╗
+echo  ║  Build complete!                                  ║
+echo  ╠══════════════════════════════════════════════════╣
+if "%BUILD_MODE%"=="onefile" (
+echo  ║  Portable exe: dist\DiskRaven.exe                 ║
+echo  ║  (Copy anywhere — USB, network share, etc.)       ║
+) else (
+echo  ║  Portable folder: dist\DiskRaven\DiskRaven.exe    ║
 if exist %ISCC% (
-echo  ║  Installer: dist\installer\*.exe           ║
+echo  ║  Installer:       dist\installer\*.exe             ║
 )
-echo  ╚══════════════════════════════════════════╝
+)
+echo  ╚══════════════════════════════════════════════════╝
+echo.
+echo  Settings are stored in DiskRaven_Data\ next to the exe.
+echo  No registry, no AppData — fully portable.
 echo.
 
 endlocal

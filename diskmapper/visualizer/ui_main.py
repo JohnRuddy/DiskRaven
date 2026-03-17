@@ -34,6 +34,7 @@ from diskmapper.analysis.cleanup_engine import (
 from diskmapper.reports.exporter import export_csv, export_json, export_html
 from diskmapper.visualizer.treemap_renderer import TreemapView
 from diskmapper.system.windows_paths import SYSTEM_DRIVE, criticality_colour as crit_colour
+from diskmapper.portable import PortableSettings
 
 
 def _fmt(b) -> str:
@@ -244,6 +245,9 @@ class MainWindow(QMainWindow):
         self.resize(1440, 900)
         self.setStyleSheet(_DARK_STYLE)
 
+        # Portable settings — stored next to the exe, never in AppData
+        self._settings = PortableSettings()
+
         self._root: Optional[FolderNode] = None
         self._scan_worker: Optional[ScanWorker] = None
         self._deleter = SafeDeleter(dry_run=False)
@@ -252,6 +256,9 @@ class MainWindow(QMainWindow):
         self._build_toolbar()
         self._build_ui()
         self._build_statusbar()
+
+        # Restore saved settings
+        self._restore_settings()
 
         # Auto-refresh overview
         self._refresh_overview()
@@ -353,6 +360,47 @@ class MainWindow(QMainWindow):
         self._dry_run_cb.setToolTip("Simulate deletions without actually deleting")
         self._dry_run_cb.toggled.connect(lambda v: setattr(self._deleter, "dry_run", v))
         tb.addWidget(self._dry_run_cb)
+
+    # ── Portable settings save / restore ──────────────────────────────
+
+    def _restore_settings(self) -> None:
+        """Restore last-used drive, depth, dry-run, and window geometry."""
+        cfg = self._settings
+
+        # Last drive
+        last_drive = cfg.get("last_drive")
+        if last_drive:
+            idx = self._drive_combo.findText(last_drive)
+            if idx >= 0:
+                self._drive_combo.setCurrentIndex(idx)
+
+        # Depth
+        depth = cfg.get("scan_depth")
+        if depth is not None:
+            self._depth_spin.setValue(int(depth))
+
+        # Dry-run
+        dry = cfg.get("dry_run", False)
+        self._dry_run_cb.setChecked(bool(dry))
+
+        # Window geometry
+        geom = cfg.get("window_geometry")
+        if geom and len(geom) == 4:
+            self.setGeometry(*geom)
+
+    def _save_settings(self) -> None:
+        """Persist current UI state for next launch."""
+        cfg = self._settings
+        cfg.set("last_drive", self._drive_combo.currentText())
+        cfg.set("scan_depth", self._depth_spin.value())
+        cfg.set("dry_run", self._dry_run_cb.isChecked())
+        g = self.geometry()
+        cfg.set("window_geometry", [g.x(), g.y(), g.width(), g.height()])
+
+    def closeEvent(self, event) -> None:  # noqa: N802
+        """Save settings when the window closes."""
+        self._save_settings()
+        super().closeEvent(event)
 
     # ── Status bar ────────────────────────────────────────────────────
 

@@ -5,14 +5,14 @@ Centralises all brand strings, colours, and asset paths so every
 module and the installer reference a single source of truth.
 """
 
-import os
+from diskmapper.portable import resource_path
 
 # ── Identity ──────────────────────────────────────────────────────────────
 
 APP_NAME        = "DiskRaven"
 APP_DISPLAY     = "DiskRaven"
 APP_TAGLINE     = "See Everything. Reclaim Your Space."
-APP_VERSION     = "1.0.0"
+APP_VERSION     = "1.1.0"
 APP_PUBLISHER   = "DiskRaven Software"
 APP_COPYRIGHT   = "© 2026 DiskRaven Software. All rights reserved."
 APP_URL         = "https://diskraven.app"
@@ -22,13 +22,11 @@ APP_DESCRIPTION = (
     "hidden-space detection, and safe one-click cleanup."
 )
 
-# ── Paths (relative to project root) ─────────────────────────────────────
+# ── Paths (work in dev checkout AND frozen PyInstaller bundles) ──────────
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
-ASSETS_DIR   = os.path.join(_HERE, "assets")
-PROJECT_ROOT = os.path.dirname(_HERE)
-ICON_PNG     = os.path.join(ASSETS_DIR, "diskraven.png")
-LICENSE_FILE = os.path.join(PROJECT_ROOT, "LICENSE.txt")
+ASSETS_DIR   = resource_path("diskmapper/assets")
+ICON_PNG     = resource_path("diskmapper/assets/diskraven.png")
+LICENSE_FILE = resource_path("LICENSE.txt")
 
 # ── Colour palette (Catppuccin Mocha + brand accent) ─────────────────────
 

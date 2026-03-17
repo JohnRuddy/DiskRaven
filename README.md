@@ -82,13 +82,16 @@ The easiest way to install DiskRaven. Provides a familiar InstallShield-style se
 
 ### Option B — Portable Executable
 
-No installation required — run directly from any folder or USB drive.
+No installation required — run directly from any folder, USB drive, or network share. **Zero registry entries, zero AppData writes.** Settings are stored in a `DiskRaven_Data/` folder next to the exe.
 
-1. Download and extract the `DiskRaven_Portable.zip` from [Releases](https://github.com/JohnRuddy/DiskRaven/releases)
-2. Open the extracted `DiskRaven` folder
+1. Download `DiskRaven_Portable.zip` from [Releases](https://github.com/JohnRuddy/DiskRaven/releases)
+2. Extract anywhere (USB drive, Desktop, wherever you like)
 3. Double-click `DiskRaven.exe`
+4. Your settings (last drive, window position, etc.) are saved automatically next to the exe
 
 > **Tip:** For full system scan access, right-click `DiskRaven.exe` → **Run as administrator**.
+>
+> **Single-exe variant:** A `DiskRaven.exe` (onefile) build is also available — one file, nothing to extract. Drop it on a USB stick and go.
 
 ---
 
@@ -206,15 +209,14 @@ Requires [PyInstaller](https://pyinstaller.org).
 # Install PyInstaller
 pip install pyinstaller
 
-# Generate brand assets (if not already done)
-pip install Pillow
-python generate_assets.py
-
-# Build the executable
+# Option 1: One-directory portable bundle (faster startup)
 pyinstaller --clean --noconfirm diskraven.spec
-```
+# → dist\DiskRaven\DiskRaven.exe
 
-The output will be in `dist\DiskRaven\DiskRaven.exe` (single-folder bundle).
+# Option 2: Single-file portable exe (USB-ready, one file)
+pyinstaller --clean --noconfirm diskraven_onefile.spec
+# → dist\DiskRaven.exe
+```
 
 ### Building the Installer
 
@@ -232,15 +234,19 @@ The installer will be created at `dist\installer\DiskRaven_Setup_1.0.0.exe`.
 The included `build.bat` automates the entire pipeline:
 
 ```powershell
+# Standard build (one-directory portable bundle)
 .\build.bat
+
+# Single-exe build (one file, USB-ready)
+.\build.bat --onefile
 ```
 
 This will:
 
-1. ✅ Install build dependencies (PyInstaller, Pillow)
-2. ✅ Generate brand assets (icon, splash, installer images)
-3. ✅ Bundle with PyInstaller → `dist\DiskRaven\DiskRaven.exe`
-4. ✅ Build Inno Setup installer → `dist\installer\DiskRaven_Setup_1.0.0.exe`
+1. ✅ Check for Python and create a virtual environment if needed
+2. ✅ Install all dependencies automatically
+3. ✅ Bundle with PyInstaller → `dist\DiskRaven\DiskRaven.exe` (or `dist\DiskRaven.exe` for onefile)
+4. ✅ Build Inno Setup installer → `dist\installer\DiskRaven_Setup_1.1.0.exe` (onedir mode only)
 
 #### Build Prerequisites
 
@@ -259,8 +265,9 @@ This will:
 diskmapper/
 ├── main.py                           # Application entry point
 ├── branding.py                       # Brand constants & palette
+├── portable.py                       # Portable-app infrastructure
 ├── __init__.py
-├── assets/                           # Generated brand assets
+├── assets/                           # Brand assets (bundled into exe)
 │   ├── diskraven.ico                 # Multi-resolution Windows icon
 │   ├── diskraven.png                 # 256×256 logo
 │   ├── splash.png                    # Splash screen
@@ -291,8 +298,8 @@ installer/
 └── before_install.txt                # Pre-install info screen
 
 build.bat                             # One-click build pipeline
-diskraven.spec                        # PyInstaller spec
-generate_assets.py                    # Brand asset generator
+diskraven.spec                        # PyInstaller spec (one-directory)
+diskraven_onefile.spec                # PyInstaller spec (single-exe)
 requirements.txt                      # Python dependencies
 LICENSE.txt                           # MIT license
 ```
@@ -355,6 +362,33 @@ DiskRaven is designed to prevent accidental deletion of important files:
 
 ---
 
+## Portability
+
+DiskRaven is designed as a **fully portable application**:
+
+| Aspect | How It Works |
+|---|---|
+| **No installer required** | Download, extract, run |
+| **No registry writes** | Zero registry entries created |
+| **No AppData / roaming profiles** | Nothing written to `%APPDATA%` or `%LOCALAPPDATA%` |
+| **Settings stored locally** | `DiskRaven_Data/settings.json` next to the exe |
+| **USB-drive friendly** | Copy the folder (or single exe) to any USB drive and run |
+| **Network share friendly** | Run directly from a mapped network drive |
+| **Clean uninstall** | Delete the folder — nothing left behind |
+
+### What gets saved
+
+DiskRaven remembers your preferences between sessions:
+
+- Last selected drive
+- Window position and size
+- Scan depth setting
+- Dry-run toggle state
+
+All stored in `DiskRaven_Data/settings.json` (human-readable JSON, safe to edit or delete).
+
+---
+
 ## Dependencies
 
 | Package | Version | Purpose |
@@ -385,7 +419,7 @@ Build-only dependencies (not needed to run):
 | **Window appears blank / white** | Update your GPU drivers; PyQt6 requires OpenGL 2.0+ |
 | **SmartScreen blocks the installer** | Click **More info → Run anyway** (expected for unsigned builds) |
 | **"No module named diskmapper"** | Make sure you're running from the project root, not inside `diskmapper/` |
-| **Icons / logo not showing** | Run `python generate_assets.py` to regenerate brand assets |
+| **Icons / logo not showing** | Assets are bundled into the exe automatically. If running from source, check that `diskmapper/assets/diskraven.png` exists |
 | **Build fails with PyInstaller** | Ensure the venv is activated and try `pip install --upgrade pyinstaller` |
 | **Inno Setup not found by build.bat** | Install [Inno Setup 6](https://jrsoftware.org/isinfo.php) to the default path |
 

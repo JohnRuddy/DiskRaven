@@ -1,11 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
 """
-DiskRaven — PyInstaller spec file (one-directory portable bundle).
+DiskRaven — PyInstaller spec file (single-file portable executable).
 
 Build with:
-    pyinstaller diskraven.spec
+    pyinstaller diskraven_onefile.spec
 
-Produces:  dist/DiskRaven/  (single-folder portable app)
+Produces:  dist/DiskRaven.exe  (one self-contained executable)
+
+Everything — Python runtime, libraries, and assets — is packed into a
+single .exe that extracts to a temp folder at launch.  Perfect for USB
+drives or "download-and-run" distribution.
 """
 
 import os
@@ -55,13 +59,17 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(
     pyz,
     a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
     [],
-    exclude_binaries=True,
     name="DiskRaven",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
     console=False,                        # windowed (no console)
     disable_windowed_traceback=False,
     argv_emulation=False,
@@ -69,15 +77,4 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon="diskmapper/assets/diskraven.ico",
-)
-
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    name="DiskRaven",
 )

@@ -25,3 +25,6 @@ Desktop.ini
 # Build artifacts
 *.exe
 *.msi
+
+# Portable app data (settings/logs stored next to exe)
+DiskRaven_Data/
