@@ -230,12 +230,12 @@ class MainWindow(QMainWindow):
         super().__init__()
         from diskmapper.branding import (
             APP_NAME, APP_TAGLINE, APP_VERSION, APP_DESCRIPTION,
-            ICON_ICO, ICON_PNG, Palette,
+            ICON_PNG, Palette,
         )
         self._brand = {
             "name": APP_NAME, "tagline": APP_TAGLINE,
             "version": APP_VERSION, "desc": APP_DESCRIPTION,
-            "icon_ico": ICON_ICO, "icon_png": ICON_PNG,
+            "icon_png": ICON_PNG,
         }
         self.setWindowTitle(f"{APP_NAME} — {APP_TAGLINE}")
         if os.path.isfile(ICON_PNG):

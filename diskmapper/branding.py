@@ -27,9 +27,7 @@ APP_DESCRIPTION = (
 _HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR   = os.path.join(_HERE, "assets")
 PROJECT_ROOT = os.path.dirname(_HERE)
-ICON_ICO     = os.path.join(ASSETS_DIR, "diskraven.ico")
 ICON_PNG     = os.path.join(ASSETS_DIR, "diskraven.png")
-SPLASH_PNG   = os.path.join(ASSETS_DIR, "splash.png")
 LICENSE_FILE = os.path.join(PROJECT_ROOT, "LICENSE.txt")
 
 # ── Colour palette (Catppuccin Mocha + brand accent) ─────────────────────
