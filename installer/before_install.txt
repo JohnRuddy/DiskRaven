@@ -1,0 +1,27 @@
+                    ╔══════════════════════════════════════╗
+                    ║         D I S K R A V E N            ║
+                    ║   See Everything. Reclaim Your Space. ║
+                    ╚══════════════════════════════════════╝
+
+Thank you for choosing DiskRaven!
+
+DiskRaven is a high-performance disk visualization and cleanup tool for
+Windows that gives you a crystal-clear view of exactly where your disk
+space is going — and helps you safely reclaim it.
+
+WHAT'S INCLUDED
+───────────────
+  ✦  Interactive treemap visualization (SpaceMonger / WinDirStat-style)
+  ✦  Criticality scoring engine (0–100) for every folder
+  ✦  Hidden space detection (Recycle Bin, caches, hibernation file, etc.)
+  ✦  Safe one-click cleanup (uses Recycle Bin by default)
+  ✦  Duplicate file detection
+  ✦  Export reports in CSV, JSON, or styled HTML
+
+SYSTEM REQUIREMENTS
+───────────────────
+  •  Windows 10 or Windows 11 (64-bit)
+  •  100 MB free disk space
+  •  Administrator privileges recommended for full system scans
+
+Click "Next" to review the license agreement and begin installation.
